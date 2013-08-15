@@ -1,0 +1,83 @@
+>拓扑排序
+
+###什么是[拓扑排序][]###
+  [拓扑排序]: http://baike.baidu.com/view/288212.htm
+对一个有向无环图(Directed Acyclic Graph简称DAG)G进行拓扑排序，是将G中所有顶点排成一个线性序列，使得图中任意一对顶点u和v(一条有向边可以表示为(u, v))，若 ∈E(G)，则u在线性序列中出现在v之前。
+#####eg:#####
+![拓扑排序图][]
+  [拓扑排序图]: ../images/toplogical-sort.gif  "Toplogical Sort"
+<br />
+如上图所示，图（a），排序后的结果是：6, 1, 4, 3, 2, 5  
+排序的结果不是唯一的，图（a）排序后的结果还可以为1, 6, 3, 2, 4, 5
+<br />
+常用的算法是“入度为零”的算法，上图的图（a）到图（f）的过程就是使用入度为零的一个过程
+>1. 从有向图中选取一个没有前驱的顶点，并输出之 (入度为零，如图a的v1，v6)；
+>2. 从有向图中删去此顶点以及所有以它为尾的弧；（如图a，输出v1或v6后，要相应的删除以它为顶点的边{(v1, v2), (v1, v3), (v1, v4)}或{(v6, v4), (v6, v5)}）
+>3. 重复上述两步，直至图空，或者图不空但找不到无前驱的顶点为止。
+
+###[TSort][]的使用###
+  [TSort]: http://www.ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html
+借用api的例子
+
+	require 'tsort'
+	class Hash
+	  include TSort
+	  alias tsort_each_node each_key
+	  def tsort_each_child(node, &block)
+    	fetch(node).each(&block)
+      end
+	end
+	
+	####将上图（a）以hash的形式表示
+	{ 1 => [2, 3, 4], 2 => [], 3 => [2, 5], 4 =>[5], 5 => [], 6 => [4, 5] }.tsort #=> [2, 5, 3, 4, 1, 6]； 与入度为零的结果相反
+	
+tsort_each_node和tsort_each_child是必须rewrite的两个方法  
+TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节点的子节点  
+如上图a的，通过tsort_each_node分别得到 v1, v2, v3, v4, v5, v6；通过tsort_each_child v1得到 v2, v3, v4
+
+###[Rails里的使用示例][]###
+  [Rails里的使用示例]: https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39
+  
+  	### 请结合rails的源码一起观看:[Rails里的使用示例]
+  	require 'rails'
+  	### 定义一个简单的Initializer
+	class Initializer
+	  attr_reader :name
+	  ### options = { after: other_initializer_name, before: other_initializer_name }
+	  def initialize name, options = {}
+	    @name = name
+	    @options = options
+	  end
+	  
+	  def before
+	    @options[:before]
+	  end
+	  
+	  def after
+	    @options[:after]
+	  end
+	end
+	
+	collection = Rails::Initializable::Collection.new([
+		Initializer.new("v1"),
+		Initializer.new("v2", { after: "v1" }),
+		Initializer.new("v3", { after: "v2" })
+	])
+	p collection #=> [
+	  #<Initializer:0x007f85425e7788 @name="v1", @options={}>,
+	  #<Initializer:0x007f85425e75d0 @name="v2", @options={:after=>"v1"}>,
+	  #<Initializer:0x007f85425e7490 @name="v3", @options={:after=>"v2"}>
+	]
+	
+	collection = collection + [
+	  Initializer.new("v1.5", {after: "v1", before: "v2" }), 
+	  Initializer.new("v2.5", {before: "v3"})
+	]
+	p collection #=> [
+	  #<Initializer:0x007ffc09486770 @name="v1", @options={}>,
+	  #<Initializer:0x007ffc09485ac8 @name="v1.5", @options={:after=>"v1", :before=>"v2"}>,
+	  #<Initializer:0x007ffc09486680 @name="v2", @options={:after=>"v1"}>,
+	  #<Initializer:0x007ffc094859d8 @name="v2.5", @options={:before=>"v3"}>,
+	  #<Initializer:0x007ffc094865b8 @name="v3", @options={:after=>"v2"}>
+	]
+上面的例子中，如果 "v1.5"没有{before: "v2"}，得到的结果"v1.5"会在最后面，这是因为{after: "v1"}，可以在v1后面的任意位置
