@@ -11,8 +11,7 @@ categories: Rails Source
   [拓扑排序]: http://baike.baidu.com/view/288212.htm
 对一个有向无环图(Directed Acyclic Graph简称DAG)G进行拓扑排序，是将G中所有顶点排成一个线性序列，使得图中任意一对顶点u和v(一条有向边可以表示为(u, v))，若 ∈E(G)，则u在线性序列中出现在v之前。
 #####eg:#####
-![拓扑排序图][]
-  [拓扑排序图]: ../images/toplogical-sort.gif  "Toplogical Sort"
+{% img /images/toplogical-sort.gif %}
 <br />
 如上图所示，图（a），排序后的结果是：6, 1, 4, 3, 2, 5  
 排序的结果不是唯一的，图（a）排序后的结果还可以为1, 6, 3, 2, 4, 5
