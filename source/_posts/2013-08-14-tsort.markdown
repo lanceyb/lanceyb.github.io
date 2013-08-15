@@ -1,3 +1,10 @@
+---
+layout: post
+title: "TSort"
+date: 2013-08-15 16:25
+comments: true
+categories: Rails Source
+---
 >拓扑排序
 
 ###什么是[拓扑排序][]###
