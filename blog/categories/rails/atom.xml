@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Lance.zyb Blog]]></title>
-  <link href="http://lanceyb.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Rails | Lance.zyb Blog]]></title>
+  <link href="http://lanceyb.github.io/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
   <updated>2013-08-15T16:42:16+08:00</updated>
   <id>http://lanceyb.github.io/</id>
@@ -26,7 +26,7 @@
 
 <h5>eg:</h5>
 
-<p><img src="http://lanceyb.github.io/images/toplogical-sort.gif"></p>
+<p><img src="/images/toplogical-sort.gif"></p>
 
 <br />
 
@@ -113,7 +113,7 @@ p collection #=&gt; [
 ]
 </code></pre>
 
-<p>上面的例子中，如果 &ldquo;v1.5&#8221;没有{before: &#8220;v2&rdquo;}，得到的结果&#8221;v1.5&#8221;会在最后面，这是因为{after: &ldquo;v1&rdquo;}，可以在v1后面的任意位置</p>
+<p>上面的例子中，如果 &ldquo;v1.5"没有{before: "v2&rdquo;}，得到的结果"v1.5"会在最后面，这是因为{after: &ldquo;v1&rdquo;}，可以在v1后面的任意位置</p>
 ]]></content>
   </entry>
   
