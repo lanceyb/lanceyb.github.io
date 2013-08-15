@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Source | Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/blog/categories/source/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-08-15T16:42:16+08:00</updated>
+  <updated>2013-08-15T17:21:29+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -69,7 +69,25 @@ TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节�
 
 <h3><a href="https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39">Rails里的使用示例</a></h3>
 
-<pre><code>### 请结合rails的源码一起观看:[Rails里的使用示例]
+<pre><code>### rails/railties/lib/rails/initializable.rb
+module Rails
+  module Initializable
+    class Collection &lt; Array
+      include TSort
+
+      alias :tsort_each_node :each
+      def tsort_each_child(initializer, &amp;block)
+        select { |i| i.before == initializer.name || i.name == initializer.after }.each(&amp;block)
+      end
+
+      def +(other)
+        Collection.new(to_a + other.to_a)
+      end
+    end
+  end
+end
+### rails end
+
 require 'rails'
 ### 定义一个简单的Initializer
 class Initializer
