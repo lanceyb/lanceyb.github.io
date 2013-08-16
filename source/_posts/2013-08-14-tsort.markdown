@@ -24,7 +24,7 @@ categories: Rails Source
 ###[TSort][]的使用###
   [TSort]: http://www.ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html
 借用api的例子
-
+{% codeblock lang:ruby %}
 	require 'tsort'
 	class Hash
 	  include TSort
@@ -36,6 +36,7 @@ categories: Rails Source
 	
 	####将上图（a）以hash的形式表示
 	{ 1 => [2, 3, 4], 2 => [], 3 => [2, 5], 4 =>[5], 5 => [], 6 => [4, 5] }.tsort #=> [2, 5, 3, 4, 1, 6]； 与入度为零的结果相反
+{% endcodeblock %}
 	
 tsort_each_node和tsort_each_child是必须rewrite的两个方法  
 TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节点的子节点  
@@ -43,27 +44,29 @@ TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节�
 
 ###[Rails里的使用示例][]###
   [Rails里的使用示例]: https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39
-  	### rails/railties/lib/rails/initializable.rb
-  	module Rails
-  	  module Initializable
-  	    class Collection < Array
-  	      include TSort
+{% codeblock lang:ruby rails/railties/lib/rails/initializable.rb https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39 %}
+module Rails
+  module Initializable
+	  class Collection < Array
+	  
+	  	include TSort
+     
+      alias :tsort_each_node :each
+      
+      def tsort_each_child(initializer, &block)
+        select { |i| i.before == initializer.name || i.name == initializer.after }.each(&block)
+      end
 
-          alias :tsort_each_node :each
-          def tsort_each_child(initializer, &block)
-            select { |i| i.before == initializer.name || i.name == initializer.after }.each(&block)
-          end
-
-          def +(other)
-            Collection.new(to_a + other.to_a)
-          end
-        end
+      def +(other)
+        Collection.new(to_a + other.to_a)
       end
     end
-  	### rails end
-  	
-  	require 'rails'
-  	### 定义一个简单的Initializer
+  end
+end
+{% endcodeblock %}
+{% codeblock lang:ruby %}
+ require 'rails'
+ ### 定义一个简单的Initializer
 	class Initializer
 	  attr_reader :name
 	  ### options = { after: other_initializer_name, before: other_initializer_name }
@@ -103,4 +106,5 @@ TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节�
 	  #<Initializer:0x007ffc094859d8 @name="v2.5", @options={:before=>"v3"}>,
 	  #<Initializer:0x007ffc094865b8 @name="v3", @options={:after=>"v2"}>
 	]
+{% endcodeblock %}
 上面的例子中，如果 "v1.5"没有{before: "v2"}，得到的结果"v1.5"会在最后面，这是因为{after: "v1"}，可以在v1后面的任意位置
