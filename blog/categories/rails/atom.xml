@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-08-15T17:21:29+08:00</updated>
+  <updated>2013-08-16T10:11:44+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -48,20 +48,40 @@
 
 <h3><a href="http://www.ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">TSort</a>的使用</h3>
 
-<p>借用api的例子</p>
-
-<pre><code>require 'tsort'
-class Hash
-  include TSort
-  alias tsort_each_node each_key
-  def tsort_each_child(node, &amp;block)
-    fetch(node).each(&amp;block)
-  end
-end
-
-####将上图（a）以hash的形式表示
-{ 1 =&gt; [2, 3, 4], 2 =&gt; [], 3 =&gt; [2, 5], 4 =&gt;[5], 5 =&gt; [], 6 =&gt; [4, 5] }.tsort #=&gt; [2, 5, 3, 4, 1, 6]； 与入度为零的结果相反
-</code></pre>
+<p>借用api的例子
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;require &#39;tsort&#39;</span>
+</span><span class='line'><span class="sr">class Hash</span>
+</span><span class='line'><span class="sr">  include TSort</span>
+</span><span class='line'><span class="sr">  alias tsort_each_node each_key</span>
+</span><span class='line'><span class="sr">  def tsort_each_child(node, &amp;amp;block)</span>
+</span><span class='line'><span class="sr">    fetch(node).each(&amp;amp;block)</span>
+</span><span class='line'><span class="sr">  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">####将上图（a）以hash的形式表示</span>
+</span><span class='line'><span class="sr">{ 1 =&amp;gt; [2, 3, 4], 2 =&amp;gt; [], 3 =&amp;gt; [2, 5], 4 =&amp;gt;[5], 5 =&amp;gt; [], 6 =&amp;gt; [4, 5] }.tsort #=&amp;gt; [2, 5, 3, 4, 1, 6]； 与入度为零的结果相反</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>tsort_each_node和tsort_each_child是必须rewrite的两个方法<br/>
 TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节点的子节点<br/>
@@ -69,69 +89,142 @@ TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节�
 
 <h3><a href="https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39">Rails里的使用示例</a></h3>
 
-<pre><code>### rails/railties/lib/rails/initializable.rb
-module Rails
-  module Initializable
-    class Collection &lt; Array
-      include TSort
-
-      alias :tsort_each_node :each
-      def tsort_each_child(initializer, &amp;block)
-        select { |i| i.before == initializer.name || i.name == initializer.after }.each(&amp;block)
-      end
-
-      def +(other)
-        Collection.new(to_a + other.to_a)
-      end
-    end
-  end
-end
-### rails end
-
-require 'rails'
-### 定义一个简单的Initializer
-class Initializer
-  attr_reader :name
-  ### options = { after: other_initializer_name, before: other_initializer_name }
-  def initialize name, options = {}
-    @name = name
-    @options = options
-  end
-
-  def before
-    @options[:before]
-  end
-
-  def after
-    @options[:after]
-  end
-end
-
-collection = Rails::Initializable::Collection.new([
-    Initializer.new("v1"),
-    Initializer.new("v2", { after: "v1" }),
-    Initializer.new("v3", { after: "v2" })
-])
-p collection #=&gt; [
-  #&lt;Initializer:0x007f85425e7788 @name="v1", @options={}&gt;,
-  #&lt;Initializer:0x007f85425e75d0 @name="v2", @options={:after=&gt;"v1"}&gt;,
-  #&lt;Initializer:0x007f85425e7490 @name="v3", @options={:after=&gt;"v2"}&gt;
-]
-
-collection = collection + [
-  Initializer.new("v1.5", {after: "v1", before: "v2" }), 
-  Initializer.new("v2.5", {before: "v3"})
-]
-p collection #=&gt; [
-  #&lt;Initializer:0x007ffc09486770 @name="v1", @options={}&gt;,
-  #&lt;Initializer:0x007ffc09485ac8 @name="v1.5", @options={:after=&gt;"v1", :before=&gt;"v2"}&gt;,
-  #&lt;Initializer:0x007ffc09486680 @name="v2", @options={:after=&gt;"v1"}&gt;,
-  #&lt;Initializer:0x007ffc094859d8 @name="v2.5", @options={:before=&gt;"v3"}&gt;,
-  #&lt;Initializer:0x007ffc094865b8 @name="v3", @options={:after=&gt;"v2"}&gt;
-]
-</code></pre>
-
-<p>上面的例子中，如果 &ldquo;v1.5"没有{before: "v2&rdquo;}，得到的结果"v1.5"会在最后面，这是因为{after: &ldquo;v1&rdquo;}，可以在v1后面的任意位置</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>rails/railties/lib/rails/initializable.rb <a href="https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39">https://github.com/rails/rails/blob/master/railties/lib/rails/initializable.rb#L39</a> </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Rails</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Initializable</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;  class Collection &amp;lt; Array</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">    include TSort</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">  alias :tsort_each_node :each</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">  def tsort_each_child(initializer, &amp;amp;block)</span>
+</span><span class='line'><span class="sr">    select { |i| i.before == initializer.name || i.name == initializer.after }.each(&amp;amp;block)</span>
+</span><span class='line'><span class="sr">  end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">  def +(other)</span>
+</span><span class='line'><span class="sr">    Collection.new(to_a + other.to_a)</span>
+</span><span class='line'><span class="sr">  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">rails</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+</span><span class='line'> <span class="c1">### 定义一个简单的Initializer&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">Initializer</span>
+</span><span class='line'>  <span class="kp">attr_reader</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="c1">### options = { after: other_initializer_name, before: other_initializer_name }</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span> <span class="nb">name</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="vi">@options</span> <span class="o">=</span> <span class="n">options</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">before</span>
+</span><span class='line'>    <span class="vi">@options</span><span class="o">[</span><span class="ss">:before</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">after</span>
+</span><span class='line'>    <span class="vi">@options</span><span class="o">[</span><span class="ss">:after</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">collection</span> <span class="o">=</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Initializable</span><span class="o">::</span><span class="no">Collection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span>
+</span><span class='line'>    <span class="no">Initializer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;v1&quot;</span><span class="p">),</span>
+</span><span class='line'>    <span class="no">Initializer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;v2&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="ss">after</span><span class="p">:</span> <span class="s2">&quot;v1&quot;</span> <span class="p">}),</span>
+</span><span class='line'>    <span class="no">Initializer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;v3&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="ss">after</span><span class="p">:</span> <span class="s2">&quot;v2&quot;</span> <span class="p">})</span>
+</span><span class='line'><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="nb">p</span> <span class="n">collection</span> <span class="c1">#=&amp;gt; [</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007f85425e7788 @name=&quot;v1&quot;, @options={}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007f85425e75d0 @name=&quot;v2&quot;, @options={:after=&amp;gt;&quot;v1&quot;}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007f85425e7490 @name=&quot;v3&quot;, @options={:after=&amp;gt;&quot;v2&quot;}&amp;gt;</span>
+</span><span class='line'><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">collection</span> <span class="o">=</span> <span class="n">collection</span> <span class="o">+</span> <span class="o">[</span>
+</span><span class='line'>  <span class="no">Initializer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;v1.5&quot;</span><span class="p">,</span> <span class="p">{</span><span class="ss">after</span><span class="p">:</span> <span class="s2">&quot;v1&quot;</span><span class="p">,</span> <span class="ss">before</span><span class="p">:</span> <span class="s2">&quot;v2&quot;</span> <span class="p">}),</span>
+</span><span class='line'>  <span class="no">Initializer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;v2.5&quot;</span><span class="p">,</span> <span class="p">{</span><span class="ss">before</span><span class="p">:</span> <span class="s2">&quot;v3&quot;</span><span class="p">})</span>
+</span><span class='line'><span class="o">]</span>
+</span><span class='line'><span class="nb">p</span> <span class="n">collection</span> <span class="c1">#=&amp;gt; [</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007ffc09486770 @name=&quot;v1&quot;, @options={}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007ffc09485ac8 @name=&quot;v1.5&quot;, @options={:after=&amp;gt;&quot;v1&quot;, :before=&amp;gt;&quot;v2&quot;}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007ffc09486680 @name=&quot;v2&quot;, @options={:after=&amp;gt;&quot;v1&quot;}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007ffc094859d8 @name=&quot;v2.5&quot;, @options={:before=&amp;gt;&quot;v3&quot;}&amp;gt;,</span>
+</span><span class='line'>  <span class="c1">#&amp;lt;Initializer:0x007ffc094865b8 @name=&quot;v3&quot;, @options={:after=&amp;gt;&quot;v2&quot;}&amp;gt;</span>
+</span><span class='line'><span class="o">]</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+上面的例子中，如果 &ldquo;v1.5"没有{before: "v2&rdquo;}，得到的结果"v1.5"会在最后面，这是因为{after: &ldquo;v1&rdquo;}，可以在v1后面的任意位置</p>
 ]]></content>
   </entry>
   
