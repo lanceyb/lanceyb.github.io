@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Source | Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/blog/categories/source/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-09-06T11:23:36+08:00</updated>
+  <updated>2013-09-08T16:09:51+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -12,6 +12,119 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[railtie]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/09/08/railtie/"/>
+    <updated>2013-09-08T15:56:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/09/08/railtie</id>
+    <content type="html"><![CDATA[<blockquote><p>SampleApp::Application &lt; Rails::Application &lt; Rails::Engine &lt; Rails::Railtie</p></blockquote>
+
+<h3>include <a href="">Initializable</a></h3>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Initiaizable]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/08/27/initiaizable/"/>
+    <updated>2013-08-27T00:01:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/08/27/initiaizable</id>
+    <content type="html"><![CDATA[<blockquote><p>我的理解是：有序的对类进行初始化。参考<em><a href="http://lanceyb.github.io/blog/2013/08/15/tsort">TSort</a></em>。</p></blockquote>
+
+<br />
+
+
+<p>来看个例子
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;require &quot;rails&quot;</span>
+</span><span class='line'><span class="sr">class Tour</span>
+</span><span class='line'><span class="sr">    include Rails::Initializable</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">    attr_reader :cities</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">    def initialize</span>
+</span><span class='line'><span class="sr">      @cities = []</span>
+</span><span class='line'><span class="sr">    end</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">###一开始的计划是：先去USA，再去Britain，最后去France，</span>
+</span><span class='line'><span class="sr">Tour.initializer(&quot;USA&quot;) do |do_the_same_th|</span>
+</span><span class='line'><span class="sr">    @cities &amp;lt;&amp;lt; { country: &quot;USA&quot;, city: &quot;Silicon Valley&quot;, do: do_the_some_th }</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">Tour.initializer(&quot;France&quot;, before: &quot;Britain&quot;) do |do_the_same_th|</span>
+</span><span class='line'><span class="sr">    @cities &amp;lt;&amp;lt; { country: &quot;France&quot;, city: &quot;Paris&quot;, do: do_the_same_th }</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">Tour.initializer(&quot;Britain&quot;, before: &quot;USA&quot;) do |do_the_same_th|</span>
+</span><span class='line'><span class="sr">    @cities &amp;lt;&amp;lt; { country: &quot;Britain&quot;, city: &quot;London&quot;, do: do_the_same_th }</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">###后来我改变注意了，想去英国后，先回趟中国，再去法国</span>
+</span><span class='line'><span class="sr">Tour.initializer(&quot;China&quot;, before: &quot;Britain&quot;, after: &quot;France&quot;) do |do_the_same_th|</span>
+</span><span class='line'><span class="sr">    @cities &amp;lt;&amp;lt; { country: &quot;China&quot;, city: &quot;Beijin&quot;, do: do_the_same_th }</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">my_tour = Tour.new</span>
+</span><span class='line'><span class="sr">my_tour.run_initializers(:default, &quot;take a photo&quot;)</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">my_tour.cities.each_with_index do |tour, index|</span>
+</span><span class='line'><span class="sr">  p &quot;</span><span class="si">#{</span><span class="n">index</span><span class="si">}</span><span class="sr">: Went to </span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:country</span><span class="o">]</span><span class="si">}</span><span class="sr">-</span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="si">}</span><span class="sr"> and </span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:do_the_same_th</span><span class="o">]</span><span class="si">}</span><span class="sr">&quot;</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+最后的输出结果如下：</p>
+
+<pre><code>"0: Went to USA-Silicon Valley and "
+"1: Went to Britain-London and "
+"2: Went to China-Beijin and "
+"3: Went to France-Paris and "
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[TSort]]></title>

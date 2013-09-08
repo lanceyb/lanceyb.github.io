@@ -4,7 +4,7 @@
   <title><![CDATA[Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-09-06T11:23:36+08:00</updated>
+  <updated>2013-09-08T16:09:51+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -14,81 +14,108 @@
 
   
   <entry>
-    <title type="html"><![CDATA[《拖拉一点也无妨》]]></title>
-    <link href="http://lanceyb.github.io/blog/2013/09/06/%3C%3Ctuo-la-%5B%3F%5D-dian-ye-wu-fang-%3E%3E/"/>
-    <updated>2013-09-06T11:22:00+08:00</updated>
-    <id>http://lanceyb.github.io/blog/2013/09/06/<<tuo-la-[?]-dian-ye-wu-fang->></id>
-    <content type="html"><![CDATA[<blockquote><ol>
-<li>结构化拖延</li>
-<li>完美主义</li>
-<li>心情不好</li>
-<li>做事情时开小差</li>
-</ol>
-</blockquote>
+    <title type="html"><![CDATA[railtie]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/09/08/railtie/"/>
+    <updated>2013-09-08T15:56:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/09/08/railtie</id>
+    <content type="html"><![CDATA[<blockquote><p>SampleApp::Application &lt; Rails::Application &lt; Rails::Engine &lt; Rails::Railtie</p></blockquote>
 
-<h3>结构化拖延</h3>
+<h3>include <a href="">Initializable</a></h3>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Initiaizable]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/08/27/initiaizable/"/>
+    <updated>2013-08-27T00:01:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/08/27/initiaizable</id>
+    <content type="html"><![CDATA[<blockquote><p>我的理解是：有序的对类进行初始化。参考<em><a href="http://lanceyb.github.io/blog/2013/08/15/tsort">TSort</a></em>。</p></blockquote>
 
-<p>eg：</p>
-
-<ol>
-<li>看《http 权威指南》</li>
-<li>《拖拉一点也无妨》</li>
-<li>…</li>
-</ol>
+<br />
 
 
-<p>之后认为自己要写一篇关于<em>Railties</em> Blog</p>
+<p>来看个例子</p>
 
-<ol>
-<li>写关于<em>Railties</em> Blog</li>
-<li>看《http 权威指南》</li>
-<li>《拖拉一点也无妨》</li>
-<li>…</li>
-</ol>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="nb">require</span> <span class="s2">&quot;rails&quot;</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Tour</span>
+</span><span class='line'>      <span class="kp">include</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Initializable</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kp">attr_reader</span> <span class="ss">:cities</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>        <span class="vi">@cities</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">###一开始的计划是：先去USA，再去Britain，最后去France，</span>
+</span><span class='line'>  <span class="no">Tour</span><span class="o">.</span><span class="n">initializer</span><span class="p">(</span><span class="s2">&quot;USA&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">do_the_same_th</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@cities</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">country</span><span class="p">:</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;Silicon Valley&quot;</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">do_the_some_th</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="no">Tour</span><span class="o">.</span><span class="n">initializer</span><span class="p">(</span><span class="s2">&quot;France&quot;</span><span class="p">,</span> <span class="ss">before</span><span class="p">:</span> <span class="s2">&quot;Britain&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">do_the_same_th</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@cities</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">country</span><span class="p">:</span> <span class="s2">&quot;France&quot;</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;Paris&quot;</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">do_the_same_th</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="no">Tour</span><span class="o">.</span><span class="n">initializer</span><span class="p">(</span><span class="s2">&quot;Britain&quot;</span><span class="p">,</span> <span class="ss">before</span><span class="p">:</span> <span class="s2">&quot;USA&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">do_the_same_th</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@cities</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">country</span><span class="p">:</span> <span class="s2">&quot;Britain&quot;</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">do_the_same_th</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">###后来我改变注意了，想去英国后，先回趟中国，再去法国</span>
+</span><span class='line'>  <span class="no">Tour</span><span class="o">.</span><span class="n">initializer</span><span class="p">(</span><span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="ss">before</span><span class="p">:</span> <span class="s2">&quot;Britain&quot;</span><span class="p">,</span> <span class="ss">after</span><span class="p">:</span> <span class="s2">&quot;France&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">do_the_same_th</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@cities</span> <span class="o">&lt;&lt;</span> <span class="p">{</span> <span class="ss">country</span><span class="p">:</span> <span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;Beijin&quot;</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">do_the_same_th</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">my_tour</span> <span class="o">=</span> <span class="no">Tour</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="n">my_tour</span><span class="o">.</span><span class="n">run_initializers</span><span class="p">(</span><span class="ss">:default</span><span class="p">,</span> <span class="s2">&quot;take a photo&quot;</span><span class="p">)</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">my_tour</span><span class="o">.</span><span class="n">cities</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">tour</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
+</span><span class='line'>    <span class="nb">p</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">index</span><span class="si">}</span><span class="s2">: Went to </span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:country</span><span class="o">]</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">tour</span><span class="o">[</span><span class="ss">:do_the_same_th</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>完美主义</h3>
+<p>最后的输出结果如下：</p>
 
-<p>eg：做个web聊天系统。</p>
-
-<ol>
-<li>了解下web socket</li>
-<li>学习nodejs</li>
-<li>研究下html5的web socket</li>
-<li>看下websocket-rails这个gem</li>
-<li>研究下smpp</li>
-<li>比较下nodejs、html5的web socket和smpp</li>
-<li>通过6的比较，选择一个合适的，做个聊天系统</li>
-</ol>
-
-
-<p>结果是web聊天系统没做成，倒是做了其他的事情，如上面1-6的某些</p>
-
-<h3>心情不好</h3>
-
-<p>听音乐</p>
-
-<h3>做事情开小差</h3>
-
-<p>前天临睡前列待办事项清单，把可能引起开小差的事情也列进去，如作者清单：</p>
-
-<ol>
-<li>关掉闹钟</li>
-<li>别按“小睡”按钮</li>
-<li>起床</li>
-<li>去浴室</li>
-<li>别回来躺下</li>
-<li>下楼</li>
-<li>煮咖啡</li>
-<li>倒第二杯咖啡</li>
-<li>在桌子旁坐下，不要窝在沙发里</li>
-<li>打开电脑</li>
-<li>不要看邮件</li>
-<li>不要上网乱逛</li>
-<li>打开world文档</li>
-<li>找到“达米特书评”那个文件夹，打开</li>
-</ol>
-
+<pre><code>"0: Went to USA-Silicon Valley and "
+"1: Went to Britain-London and "
+"2: Went to China-Beijin and "
+"3: Went to France-Paris and "
+</code></pre>
 ]]></content>
   </entry>
   
