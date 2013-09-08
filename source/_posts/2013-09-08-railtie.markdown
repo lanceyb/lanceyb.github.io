@@ -9,7 +9,7 @@ categories: Rails Source
 
 *这里需要注意的地方有下面二个*
 ###一、include *[Initializable][]*###
-  [Initializable]: /
+  [Initializable]: http://lanceyb.github.io/blog/2013/08/27/initiaizable/
 ###二、method_missing###
 源代码:
 {% codeblock lang:ruby %}
