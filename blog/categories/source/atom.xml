@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Source | Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/blog/categories/source/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-09-08T16:09:51+08:00</updated>
+  <updated>2013-09-08T16:33:19+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -20,7 +20,63 @@
     <id>http://lanceyb.github.io/blog/2013/09/08/railtie</id>
     <content type="html"><![CDATA[<blockquote><p>SampleApp::Application &lt; Rails::Application &lt; Rails::Engine &lt; Rails::Railtie</p></blockquote>
 
-<h3>include <a href="">Initializable</a></h3>
+<p><em>这里需要注意的地方有下面二个</em></p>
+
+<h3>一、include <em><a href="/">Initializable</a></em></h3>
+
+<h3>二、method_missing</h3>
+
+<p>源代码:
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;class &amp;lt;&amp;lt; self</span>
+</span><span class='line'><span class="sr">  …</span>
+</span><span class='line'><span class="sr">  def instance&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="vi">@instance</span> <span class="o">||=</span> <span class="kp">new</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'>  <span class="kp">protected</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;# If the class method does not have a method, then send the method call</span>
+</span><span class='line'><span class="sr"># to the Railtie instance.</span>
+</span><span class='line'><span class="sr">def method_missing(name, *args, &amp;amp;block)</span>
+</span><span class='line'><span class="sr">  if instance.respond_to?(name)</span>
+</span><span class='line'><span class="sr">    instance.public_send(name, *args, &amp;amp;block)</span>
+</span><span class='line'><span class="sr">  else</span>
+</span><span class='line'><span class="sr">    super</span>
+</span><span class='line'><span class="sr">  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+将 <em>instance methods</em> 委托给 <em>class</em> 使用</p>
 ]]></content>
   </entry>
   
