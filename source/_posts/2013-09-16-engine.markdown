@@ -13,14 +13,15 @@ categories: Rails Source
 3. mount EngineName::Engine, at: 'engine_name'
 
 ###那么Engine做了什么###
-methods:
-
-1. isolate_namespace
-2. app
-3. routes
-4. initializers
+>
+1. isolate_namespace  
+2. app  
+3. routes  
+4. initializers  
 
 ####isolate_namespace####
+用命名空间来隔离不同的engine  
+
 1. 设置railtie_name为 engine_name
 2. 设置routes的default_scope为 engine_name
 3. 其他
@@ -32,8 +33,6 @@ An instance of ActionDispatch::MiddlewareStack used to store middlewares.
 An instance of ActionDispatch::Routing::RouteSet used to store routes.
 
 ####initializers####
-Engine < Railtie。
-
 有如下这些initializers：
 
 1. set_load_path before: :bootstrap_hook
