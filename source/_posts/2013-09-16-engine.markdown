@@ -1,0 +1,134 @@
+---
+layout: post
+title: "Engine"
+date: 2013-09-16 11:04
+comments: true
+categories: Rails Source
+---
+###怎么使用Engine的###
+>[http://guides.rubyonrails.org/engines.html](http://guides.rubyonrails.org/engines.html)
+
+1. rails plugin new engine_name --mountable
+2. gem 'engine_name', path: "engine_path"
+3. mount EngineName::Engine, at: 'engine_name'
+
+###那么Engine做了什么###
+>
+1. isolate_namespace  
+2. app  
+3. routes  
+4. initializers  
+
+####isolate_namespace####
+用命名空间来隔离不同的engine  
+
+1. 设置railtie_name为 engine_name
+2. 设置routes的default_scope为 engine_name
+3. 其他
+
+####app####
+An instance of ActionDispatch::MiddlewareStack used to store middlewares.
+
+####routes####
+An instance of ActionDispatch::Routing::RouteSet used to store routes.
+
+####initializers####
+有如下这些initializers：
+
+1. set_load_path before: :bootstrap_hook
+	
+		#将configred load paths 添加到 ruby load paths
+		initializer :set_load_path, before: :bootstrap_hook do
+          _all_load_paths.reverse_each do |path|
+        	$LOAD_PATH.unshift(path) if File.directory?(path)
+      	  end
+      	  $LOAD_PATH.uniq!
+    	end
+
+2. set_autoload_paths :bootstrap_hook
+
+		#暂时不能理解，简单的认为是那些自动加载的文件
+		#包括["app"，"app/controllers", "app/helpers", "app/models",
+		#    "app/mailers", "app/controllers/concerns", "app/models/concerns"]
+		initializer :set_autoload_paths, before: :bootstrap_hook do
+      	  ActiveSupport::Dependencies.autoload_paths.unshift(*_all_autoload_paths)
+      	  ActiveSupport::Dependencies.autoload_once_paths.unshift(*_all_autoload_once_paths)
+
+      	  # Freeze so future modifications will fail rather than do nothing mysteriously
+      	  config.autoload_paths.freeze
+      	  config.eager_load_paths.freeze
+      	  config.autoload_once_paths.freeze
+    	end
+
+
+3. add_routing_paths
+
+		#加载路由文件
+		initializer :add_routing_paths do |app|
+          paths = self.paths["config/routes.rb"].existent
+
+      	  if routes? || paths.any?
+          	app.routes_reloader.paths.unshift(*paths)
+        	app.routes_reloader.route_sets << routes
+          end
+        end
+
+4. add_locales
+
+		#I18n文件
+		initializer :add_locales do
+      	  config.i18n.railties_load_path.concat(paths["config/locales"].existent)
+    	end
+
+5. add_view_paths
+
+		#views文件为lazily load files
+		#用ActiveSupport.on_load(name, options, block)，定义一个名为name的lazily load hook
+		#之后可以ActiveSupport.run_load_hooks(name, base)来加载（让base来调用block）
+		initializer :add_view_paths do
+      	  views = paths["app/views"].existent
+      	  unless views.empty?
+        	ActiveSupport.on_load(:action_controller){ prepend_view_path(views) if respond_to?(:prepend_view_path) }
+        	ActiveSupport.on_load(:action_mailer){ prepend_view_path(views) }
+      	  end
+    	end
+
+6. load_environment_config before: :load_environment_hook, group: :all
+
+		#加载environments文件
+		initializer :load_environment_config, before: :load_environment_hook, group: :all do
+      	  paths["config/environments"].existent.each do |environment|
+        	require environment
+      	  end
+    	end
+
+7. append_assets_path, group: :all
+
+		#加载assets文件
+		initializer :append_assets_path, group: :all do |app|
+      	  app.config.assets.paths.unshift(*paths["vendor/assets"].existent_directories)
+      	  app.config.assets.paths.unshift(*paths["lib/assets"].existent_directories)
+      	  app.config.assets.paths.unshift(*paths["app/assets"].existent_directories)
+    	end
+
+8. prepend_helpers_path
+
+		#加载helpers文件
+		initializer :prepend_helpers_path do |app|
+      	  if !isolated? || (app == self)
+        	app.config.helpers_paths.unshift(*paths["app/helpers"].existent)
+      	  end
+    	end
+
+9. load_config_initializers
+
+		#加载config/initializers文件
+		initializer :load_config_initializers do
+      	  config.paths["config/initializers"].existent.sort.each do |initializer|
+            load(initializer)
+      	  end
+    	end
+
+10. engines_blank_point
+
+		#空白的initializer
