@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Engine - Lance.zyb Blog</title>
+  <meta name="author" content="Lance">
+
+  
+  <meta name="description" content="怎么使用Engine的 http://guides.rubyonrails.org/engines.html rails plugin new engine_name &mdash;mountable
+gem &lsquo;engine_name&rsquo;, path: &ldquo; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lanceyb.github.io/blog/2013/09/16/engine">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Lance.zyb Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Lance.zyb Blog</a></h1>
+  
+    <h2>A Programmer.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lanceyb.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Engine</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-16T11:04:00+08:00" pubdate data-updated="true">Sep 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>怎么使用Engine的</h3>
+
+<blockquote><p><a href="http://guides.rubyonrails.org/engines.html">http://guides.rubyonrails.org/engines.html</a></p></blockquote>
+
+<ol>
+<li>rails plugin new engine_name &mdash;mountable</li>
+<li>gem &lsquo;engine_name&rsquo;, path: &ldquo;engine_path&rdquo;</li>
+<li>mount EngineName::Engine, at: &lsquo;engine_name&rsquo;</li>
+</ol>
+
+
+<h3>那么Engine做了什么</h3>
+
+<blockquote><ol>
+<li>isolate_namespace</li>
+<li>app</li>
+<li>routes</li>
+<li>initializers</li>
+</ol>
+</blockquote>
+
+<h4>isolate_namespace</h4>
+
+<p>用命名空间来隔离不同的engine</p>
+
+<ol>
+<li>设置railtie_name为 engine_name</li>
+<li>设置routes的default_scope为 engine_name</li>
+<li>其他</li>
+</ol>
+
+
+<h4>app</h4>
+
+<p>An instance of ActionDispatch::MiddlewareStack used to store middlewares.</p>
+
+<h4>routes</h4>
+
+<p>An instance of ActionDispatch::Routing::RouteSet used to store routes.</p>
+
+<h4>initializers</h4>
+
+<p>有如下这些initializers：</p>
+
+<ol>
+<li><p>set_load_path before: :bootstrap_hook</p>
+
+<pre><code> #将configred load paths 添加到 ruby load paths
+ initializer :set_load_path, before: :bootstrap_hook do
+   _all_load_paths.reverse_each do |path|
+     $LOAD_PATH.unshift(path) if File.directory?(path)
+   end
+   $LOAD_PATH.uniq!
+ end
+</code></pre></li>
+<li><p>set_autoload_paths :bootstrap_hook</p>
+
+<pre><code> #暂时不能理解，简单的认为是那些自动加载的文件
+ #包括["app"，"app/controllers", "app/helpers", "app/models",
+ #    "app/mailers", "app/controllers/concerns", "app/models/concerns"]
+ initializer :set_autoload_paths, before: :bootstrap_hook do
+   ActiveSupport::Dependencies.autoload_paths.unshift(*_all_autoload_paths)
+   ActiveSupport::Dependencies.autoload_once_paths.unshift(*_all_autoload_once_paths)
+
+   # Freeze so future modifications will fail rather than do nothing mysteriously
+   config.autoload_paths.freeze
+   config.eager_load_paths.freeze
+   config.autoload_once_paths.freeze
+ end
+</code></pre></li>
+<li><p>add_routing_paths</p>
+
+<pre><code> #加载路由文件
+ initializer :add_routing_paths do |app|
+   paths = self.paths["config/routes.rb"].existent
+
+   if routes? || paths.any?
+     app.routes_reloader.paths.unshift(*paths)
+     app.routes_reloader.route_sets &lt;&lt; routes
+   end
+ end
+</code></pre></li>
+<li><p>add_locales</p>
+
+<pre><code> #I18n文件
+ initializer :add_locales do
+   config.i18n.railties_load_path.concat(paths["config/locales"].existent)
+ end
+</code></pre></li>
+<li><p>add_view_paths</p>
+
+<pre><code> #views文件为lazily load files
+ #用ActiveSupport.on_load(name, options, block)，定义一个名为name的lazily load hook
+ #之后可以ActiveSupport.run_load_hooks(name, base)来加载（让base来调用block）
+ initializer :add_view_paths do
+   views = paths["app/views"].existent
+   unless views.empty?
+     ActiveSupport.on_load(:action_controller){ prepend_view_path(views) if respond_to?(:prepend_view_path) }
+     ActiveSupport.on_load(:action_mailer){ prepend_view_path(views) }
+   end
+ end
+</code></pre></li>
+<li><p>load_environment_config before: :load_environment_hook, group: :all</p>
+
+<pre><code> #加载environments文件
+ initializer :load_environment_config, before: :load_environment_hook, group: :all do
+   paths["config/environments"].existent.each do |environment|
+     require environment
+   end
+ end
+</code></pre></li>
+<li><p>append_assets_path, group: :all</p>
+
+<pre><code> #加载assets文件
+ initializer :append_assets_path, group: :all do |app|
+   app.config.assets.paths.unshift(*paths["vendor/assets"].existent_directories)
+   app.config.assets.paths.unshift(*paths["lib/assets"].existent_directories)
+   app.config.assets.paths.unshift(*paths["app/assets"].existent_directories)
+ end
+</code></pre></li>
+<li><p>prepend_helpers_path</p>
+
+<pre><code> #加载helpers文件
+ initializer :prepend_helpers_path do |app|
+   if !isolated? || (app == self)
+     app.config.helpers_paths.unshift(*paths["app/helpers"].existent)
+   end
+ end
+</code></pre></li>
+<li><p>load_config_initializers</p>
+
+<pre><code> #加载config/initializers文件
+ initializer :load_config_initializers do
+   config.paths["config/initializers"].existent.sort.each do |initializer|
+     load(initializer)
+   end
+ end
+</code></pre></li>
+<li><p>engines_blank_point</p>
+
+<pre><code>#空白的initializer
+</code></pre></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lance</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-16T11:04:00+08:00" pubdate data-updated="true">Sep 16<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/source/'>Source</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lanceyb.github.io/blog/2013/09/16/engine/" data-via="" data-counturl="http://lanceyb.github.io/blog/2013/09/16/engine/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/08/railtie/" title="Previous Post: railtie">&laquo; railtie</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/16/engine/">Engine</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/08/railtie/">railtie</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/27/initiaizable/">Initiaizable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/15/tsort/">TSort</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Lance -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
