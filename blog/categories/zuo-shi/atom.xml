@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 做事 | Lance.zyb Blog]]></title>
+  <link href="http://lanceyb.github.io/blog/categories/zuo-shi/atom.xml" rel="self"/>
+  <link href="http://lanceyb.github.io/"/>
+  <updated>2013-09-13T15:56:52+08:00</updated>
+  <id>http://lanceyb.github.io/</id>
+  <author>
+    <name><![CDATA[Lance]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[《拖拉一点也无妨》]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/09/06/%3C%3Ctuo-la-%5B%3F%5D-dian-ye-wu-fang-%3E%3E/"/>
+    <updated>2013-09-06T11:22:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/09/06/<<tuo-la-[?]-dian-ye-wu-fang->></id>
+    <content type="html"><![CDATA[<blockquote><ol>
+<li>结构化拖延</li>
+<li>完美主义</li>
+<li>心情不好</li>
+<li>做事情时开小差</li>
+</ol>
+</blockquote>
+
+<h3>结构化拖延</h3>
+
+<p>eg：</p>
+
+<ol>
+<li>看《http 权威指南》</li>
+<li>《拖拉一点也无妨》</li>
+<li>…</li>
+</ol>
+
+
+<p>之后认为自己要写一篇关于<em>Railties</em> Blog</p>
+
+<ol>
+<li>写关于<em>Railties</em> Blog</li>
+<li>看《http 权威指南》</li>
+<li>《拖拉一点也无妨》</li>
+<li>…</li>
+</ol>
+
+
+<h3>完美主义</h3>
+
+<p>eg：做个web聊天系统。</p>
+
+<ol>
+<li>了解下web socket</li>
+<li>学习nodejs</li>
+<li>研究下html5的web socket</li>
+<li>看下websocket-rails这个gem</li>
+<li>研究下smpp</li>
+<li>比较下nodejs、html5的web socket和smpp</li>
+<li>通过6的比较，选择一个合适的，做个聊天系统</li>
+</ol>
+
+
+<p>结果是web聊天系统没做成，倒是做了其他的事情，如上面1-6的某些</p>
+
+<h3>心情不好</h3>
+
+<p>听音乐</p>
+
+<h3>做事情开小差</h3>
+
+<p>前天临睡前列待办事项清单，把可能引起开小差的事情也列进去，如作者清单：</p>
+
+<ol>
+<li>关掉闹钟</li>
+<li>别按“小睡”按钮</li>
+<li>起床</li>
+<li>去浴室</li>
+<li>别回来躺下</li>
+<li>下楼</li>
+<li>煮咖啡</li>
+<li>倒第二杯咖啡</li>
+<li>在桌子旁坐下，不要窝在沙发里</li>
+<li>打开电脑</li>
+<li>不要看邮件</li>
+<li>不要上网乱逛</li>
+<li>打开world文档</li>
+<li>找到“达米特书评”那个文件夹，打开</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
