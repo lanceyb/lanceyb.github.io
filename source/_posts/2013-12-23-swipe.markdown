@@ -1,0 +1,20 @@
+---
+layout: post
+title: "swipe"
+date: 2013-12-23 16:06
+comments: true
+categories: javascript plugin:swipe
+---
+###一、如何使用swipe
+[https://github.com/bradbirdsall/Swipe](https://github.com/bradbirdsall/Swipe)
+###二、swipe源码
+1. 有3个div，如下
+{% img /images/3div.jpg %}
+2. 以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图
+{% img /images/3div-with-left.jpg %}
+3. 用transform来移动index-1，和index+1的，分别位于index的左右两边
+{% img /images/3div-transform.jpg %}
+4. 不断的循环第二步
+5. 当n>3时，因为，每次需要处理的只有3块div，仍然可以如上处理
+6. 当n==2时，将这两块div复制一遍
+7. 当n==1时，固定不动
