@@ -9,8 +9,7 @@
   <meta name="author" content="Lance">
 
   
-  <meta name="description" content="怎么使用Engine的 http://guides.rubyonrails.org/engines.html rails plugin new engine_name &mdash;mountable
-gem &lsquo;engine_name&rsquo;, path: &ldquo; &hellip;">
+  <meta name="description" content="一、如何使用swipe https://github.com/bradbirdsall/Swipe 二、swipe源码 有3个div，如下 以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图 用transform来移动index-1，和index+1的， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,60 @@ gem &lsquo;engine_name&rsquo;, path: &ldquo; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/12/23/swipe/">Swipe</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-23T16:06:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>一、如何使用swipe</h3>
+
+<p><a href="https://github.com/bradbirdsall/Swipe">https://github.com/bradbirdsall/Swipe</a></p>
+
+<h3>二、swipe源码</h3>
+
+<ol>
+<li>有3个div，如下
+<img src="/images/3div.jpg"></li>
+<li>以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图
+<img src="/images/3div-with-left.jpg"></li>
+<li>用transform来移动index-1，和index+1的，分别位于index的左右两边
+<img src="/images/3div-transform.jpg"></li>
+<li>不断的循环第二步</li>
+<li>当n>3时，因为，每次需要处理的只有3块div，仍然可以如上处理</li>
+<li>当n==2时，将这两块div复制一遍</li>
+<li>当n==1时，固定不动</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -685,6 +738,10 @@ TSort根据tsort_each_node得到每个节点，根据tsort_each_child得到节�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/12/23/swipe/">swipe</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/09/16/engine/">Engine</a>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Source - Lance.zyb Blog</title>
+  <title>swipe - Lance.zyb Blog</title>
   <meta name="author" content="Lance">
 
   
-  <meta name="description" content="Category: Source">
+  <meta name="description" content="一、如何使用swipe https://github.com/bradbirdsall/Swipe 二、swipe源码 有3个div，如下 以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图 用transform来移动index-1，和index+1的， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://lanceyb.github.ioblog/categories/source">
+  <link rel="canonical" href="http://lanceyb.github.io/blog/2013/12/23/swipe">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Lance.zyb Blog" type="application/atom+xml">
@@ -64,77 +64,102 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Source</h1>
+    
+      <h1 class="entry-title">Swipe</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-23T16:06:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><h3>一、如何使用swipe</h3>
 
-  
-  <h2>2013</h2>
+<p><a href="https://github.com/bradbirdsall/Swipe">https://github.com/bradbirdsall/Swipe</a></p>
 
-<article>
-  
-<h1><a href="/blog/2013/09/16/engine/">Engine</a></h1>
-<time datetime="2013-09-16T11:04:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>16</span> <span class='year'>2013</span></time>
+<h3>二、swipe源码</h3>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/source/'>Source</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/09/08/railtie/">railtie</a></h1>
-<time datetime="2013-09-08T15:56:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>08</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/source/'>Source</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/08/27/initiaizable/">Initiaizable</a></h1>
-<time datetime="2013-08-27T00:01:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>27</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/source/'>Source</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/08/15/tsort/">TSort</a></h1>
-<time datetime="2013-08-15T16:25:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/source/'>Source</a></span>
-</footer>
-
-
-</article>
+<ol>
+<li>有3个div，如下
+<img src="/images/3div.jpg"></li>
+<li>以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图
+<img src="/images/3div-with-left.jpg"></li>
+<li>用transform来移动index-1，和index+1的，分别位于index的左右两边
+<img src="/images/3div-transform.jpg"></li>
+<li>不断的循环第二步</li>
+<li>当n>3时，因为，每次需要处理的只有3块div，仍然可以如上处理</li>
+<li>当n==2时，将这两块div复制一遍</li>
+<li>当n==1时，固定不动</li>
+</ol>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Lance</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-23T16:06:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/plugin-swipe/'>plugin:swipe</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lanceyb.github.io/blog/2013/12/23/swipe/" data-via="" data-counturl="http://lanceyb.github.io/blog/2013/12/23/swipe/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/16/engine/" title="Previous Post: Engine">&laquo; Engine</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 

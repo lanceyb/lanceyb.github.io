@@ -4,7 +4,7 @@
   <title><![CDATA[Lance.zyb Blog]]></title>
   <link href="http://lanceyb.github.io/atom.xml" rel="self"/>
   <link href="http://lanceyb.github.io/"/>
-  <updated>2013-09-18T13:42:50+08:00</updated>
+  <updated>2013-12-23T16:44:57+08:00</updated>
   <id>http://lanceyb.github.io/</id>
   <author>
     <name><![CDATA[Lance]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[swipe]]></title>
+    <link href="http://lanceyb.github.io/blog/2013/12/23/swipe/"/>
+    <updated>2013-12-23T16:06:00+08:00</updated>
+    <id>http://lanceyb.github.io/blog/2013/12/23/swipe</id>
+    <content type="html"><![CDATA[<h3>一、如何使用swipe</h3>
+
+<p><a href="https://github.com/bradbirdsall/Swipe">https://github.com/bradbirdsall/Swipe</a></p>
+
+<h3>二、swipe源码</h3>
+
+<ol>
+<li>有3个div，如下
+<img src="http://lanceyb.github.io/images/3div.jpg"></li>
+<li>以图中1的位置为index，修改div的left，让所有的div都叠放在index位置上，如图
+<img src="http://lanceyb.github.io/images/3div-with-left.jpg"></li>
+<li>用transform来移动index-1，和index+1的，分别位于index的左右两边
+<img src="http://lanceyb.github.io/images/3div-transform.jpg"></li>
+<li>不断的循环第二步</li>
+<li>当n>3时，因为，每次需要处理的只有3块div，仍然可以如上处理</li>
+<li>当n==2时，将这两块div复制一遍</li>
+<li>当n==1时，固定不动</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Engine]]></title>
